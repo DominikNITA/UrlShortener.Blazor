@@ -1,0 +1,33 @@
+﻿@page "/"
+@using UrlShortener.Data
+@inject NavigationManager NavigationManager
+@inject ShortUrlGenerationService UrlGenerator
+
+<h1>URL .NET SHORTNER</h1>
+
+
+<p>Sem ornare sit amet proin sem sapien, auctor vel faucibus id, aliquet vitae ipsum etiam auctor ultricies ante, at dapibus urna viverra sed nullam mi arcu, tempor vitae interdum a, sodales non urna vestibulum dignissim auctor mauris, ac elementum purus fermentum vitae duis placerat laoreet risus, sit amet eleifend tellus lobortis non vivamus iaculis dapibus leo a ornare cras vel sem at felis convallis mollis posuere ultrices dolor sed tellus arcu, accumsan a consectetur sit amet, volutpat eget lorem phasellus quis ipsum orci integer sodales tincidunt nibh a elementum ut ac libero nec orci euismod euismod nec at nulla duis malesuada faucibus porta aliquam nec consequat eros sed porttitor placerat dolor</p>
+@if(_shortUrl.Length == 0){
+    <EditForm Model="urlModel" OnValidSubmit="@CreateShortUrl" class="url-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText DisplayName="Url" placeholder="Type your URL:" @bind-Value="urlModel.UrlString" class="url-form__input"></InputText>
+
+    <button type="submit" class="url-form__button">Shorten</button>
+</EditForm>
+}
+else{
+    <div class="url-form__input">@(NavigationManager.BaseUri+_shortUrl)</div>
+    <button type="button">Copy</button>
+}
+
+@code{
+    private UrlModel urlModel = new UrlModel();
+    private string _shortUrl = "";
+
+    private async void CreateShortUrl(){
+        _shortUrl = await UrlGenerator.CreateShortUrl(urlModel);
+    }
+}
+

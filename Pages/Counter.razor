@@ -1,0 +1,47 @@
+﻿@page "/{ShortUrl}"
+@inject RedirectService RedirectService
+@inject NavigationManager NavigationManager
+<h3>RedirectPage</h3>
+
+<p>@_redirectUrl</p>
+<p>@_timerValue.Seconds</p>
+
+
+@code {
+    [Parameter] public string ShortUrl { get; set; }
+    string _redirectUrl = "";
+    TimeSpan _timerValue = new TimeSpan(0,0,3);
+    bool _isStopWatchRunning = false;
+
+    //protected async override Task OnInitializedAsync()
+    //{
+
+    //}
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _redirectUrl = await RedirectService.GetRedirectUrl(ShortUrl);
+            await StopWatch();
+        }
+    }
+
+
+    async Task StopWatch()
+    {
+        _isStopWatchRunning = true;
+        while (_isStopWatchRunning)
+        {
+            await Task.Delay(1000);
+            _timerValue = _timerValue.Subtract(new TimeSpan(0, 0, 1));
+            StateHasChanged();
+            if (_timerValue.Seconds <= 0)
+            {
+                _isStopWatchRunning = false;
+                _redirectUrl = await RedirectService.GetRedirectUrl(ShortUrl);
+                NavigationManager.NavigateTo(_redirectUrl);
+            }
+        }
+    }
+}
