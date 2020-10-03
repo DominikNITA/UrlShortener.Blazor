@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +12,30 @@ namespace UrlShortener.Data
     public class ShortUrlGenerationService
     {
         ApplicationDbContext _context;
+        AuthenticationStateProvider _authenticationStateProvider;
 
-        public ShortUrlGenerationService(ApplicationDbContext context)
+        public ShortUrlGenerationService(ApplicationDbContext context, AuthenticationStateProvider authenticationStateProvider)
         {
             _context = context;
+            _authenticationStateProvider = authenticationStateProvider;
         }
 
-        public async Task<string> CreateShortUrl(UrlModel urlModel)
+        public async Task<string> CreateShortUrlAsync(UrlModel urlModel)
         {
-            //If redirect url already exists in the database return it's short url. Update creation date
-            var temp = await _context.UrlEntries.FirstOrDefaultAsync(url => url.RedirectUrl == urlModel.UrlString);
-            if (temp != null)
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if(urlModel.ShortUrl == null || !user.IsInRole("premium"))
             {
-                temp.CreationDate = DateTime.Now;
-                _context.Update(temp);
-                await _context.SaveChangesAsync();
-                return temp.ShortUrl;
+                //If redirect url already exists in the database return it's short url. Update creation date
+                var temp = await _context.UrlEntries.FirstOrDefaultAsync(url => url.RedirectUrl == urlModel.UrlString);
+                if (temp != null)
+                {
+                    temp.CreationDate = DateTime.Now;
+                    _context.Update(temp);
+                    await _context.SaveChangesAsync();
+                    return temp.ShortUrl;
+                }
             }
 
             var urlEntry = new UrlEntry();
