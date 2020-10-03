@@ -43,6 +43,7 @@ namespace UrlShortener
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<ShortUrlGenerationService>();
             services.AddScoped<RedirectService>();
+            services.AddScoped<AdService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

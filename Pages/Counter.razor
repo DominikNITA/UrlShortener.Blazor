@@ -1,34 +1,47 @@
 ﻿@page "/{ShortUrl}"
+@using UrlShortener.Components
 @inject RedirectService RedirectService
 @inject NavigationManager NavigationManager
-<h3>RedirectPage</h3>
+@inject AdService AdService
 
-<p>@_redirectUrl</p>
-<p>@_timerValue.Seconds</p>
+<div class="redirect-banner">
+    <p class="redirect-banner__text">Redirection in <span class="timer">@_timerValue.Seconds</span> seconds</p>
+</div>
+<div class="ads">
+    @if (_adData != null)
+    {
+        foreach (var adData in _adData)
+        {
+            <AdDisplay AdData="adData"></AdDisplay>
+        }
+    }
+</div>
+<FooterComponent></FooterComponent>
 
 
 @code {
-    [Parameter] public string ShortUrl { get; set; }
+    [Parameter] public string ShortUrl { get; set; } = string.Empty;
+
     string _redirectUrl = "";
-    TimeSpan _timerValue = new TimeSpan(0,0,3);
+    TimeSpan _timerValue = new TimeSpan(0, 0, 5);
     bool _isStopWatchRunning = false;
+    List<AdData> _adData;
 
-    //protected async override Task OnInitializedAsync()
-    //{
-
-    //}
+    protected override void OnInitialized()
+    {
+        _adData = AdService.GetAds();
+    }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && ShortUrl != "r")
         {
-            _redirectUrl = await RedirectService.GetRedirectUrl(ShortUrl);
-            await StopWatch();
+            await StartTimer();
         }
     }
 
 
-    async Task StopWatch()
+    async Task StartTimer()
     {
         _isStopWatchRunning = true;
         while (_isStopWatchRunning)

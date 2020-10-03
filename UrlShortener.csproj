@@ -18,17 +18,31 @@
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <Watch Include="..\**\*.razor" />
     <Watch Include="..\**\*.scss" />
     <Watch Include="..\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\AdDisplay.razor" />
+    <Content Remove="Shared\FooterComponent.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Watch Remove="Data\AdData.cs" />
+    <Watch Remove="Data\AdService.cs" />
     <Watch Remove="Data\RedirectService.cs" />
     <Watch Remove="Data\ShortUrlGenerationService.cs" />
     <Watch Remove="Data\UrlEntry.cs" />
     <Watch Remove="Data\UrlModel.cs" />
+    <Watch Remove="Pages\AdDisplay.razor" />
+    <Watch Remove="Shared\FooterComponent.razor" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\AdDisplay.razor" />
+    <None Include="Shared\FooterComponent.razor" />
+  </ItemGroup>-->
 
 </Project>

@@ -1,0 +1,8 @@
+﻿<a href="@AdData.Url" target="_blank" class="card ad">
+    <img src="@AdData.ImageSource" class="card-img-top" />   
+        <span class="card-footer">@AdData.Description</span>
+</a>
+
+@code {
+    [Parameter] public AdData AdData { get; set; }
+}
