@@ -14,12 +14,15 @@ namespace UrlShortener.Data
             _context = context;
         }
 
-        public async Task<string> GetRedirectUrl(string shortUrl)
+        public async Task<UrlEntryResponse> GetRedirectUrl(string shortUrl)
         {
-            var temp = await _context.UrlEntries.FirstOrDefaultAsync(url => url.ShortUrl == shortUrl);
-            //await Task.Delay(1500);
-            if (temp == null) return "";
-            return temp.RedirectUrl;
+            var temp = await _context.UrlEntries.FirstOrDefaultAsync(url =>
+                url.ShortUrl == shortUrl &&
+                (!url.DiscardDate.HasValue || url.DiscardDate.Value.CompareTo(DateTime.Now) > 0)
+            );
+
+            if (temp == null) return new UrlEntryResponse() { IsSuccessful = false };
+            return new UrlEntryResponse(temp);
         }
     }
 }

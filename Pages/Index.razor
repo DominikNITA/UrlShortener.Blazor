@@ -2,26 +2,43 @@
 @using UrlShortener.Data
 @inject NavigationManager NavigationManager
 @inject ShortUrlGenerationService UrlGenerator
+@inject PremiumSetterService PremiumSetterService
 
-<h1>URL .NET SHORTENER</h1>
+<div class="d-flex flex-row justify-content-between w-100">
+    <div class="placeholdererere"></div>
+    <h1>URL .NET SHORTENER</h1>
+    <LoginDisplay></LoginDisplay>
+</div>
 
-<div>
+
+<div class="d-flex flex-column align-items-center col-12 col-md-6">
+    <button @onclick="HandlePremiumActivation" class="btn btn-warning m-3 btn-outline-dark">Upgrade to premium</button>
+
     @if (_shortUrl.Length == 0)
     {
-        <EditForm Model="urlModel" OnValidSubmit="@CreateShortUrl" class="url-form">
+        <EditForm Model="urlModel" OnValidSubmit="@CreateShortUrl" class="input-group input-group-lg justify-content-center">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
-            <InputText DisplayName="Url" placeholder="Type your URL:" @bind-Value="urlModel.UrlString" class="url-form__input"></InputText>
-
-            <button type="submit" class="url-form__button">Shorten</button>
+            <InputText DisplayName="Url" placeholder="Type your URL:" @bind-Value="urlModel.UrlString" class="form-control "></InputText>
+            <AuthorizeView Roles="premium" Context="authContext">
+                <Authorized>
+                    <InputText DisplayName="Short Url" placeholder="Your custom link ending" @bind-Value="urlModel.ShortRelativeUrl" class="form-control"></InputText>
+                </Authorized>
+            </AuthorizeView>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-light btn-outline-primary">Shorten</button>
+            </div>
         </EditForm>
     }
     else
     {
-        <div class="url-form__input">@(NavigationManager.BaseUri+_shortUrl)</div>
-        <button type="button">Copy</button>
+        <div class="d-flex flex-row">
+            <div class="url-form__input">@(NavigationManager.BaseUri+_shortUrl)</div>
+            <button type="button" class="btn btn-info">Copy</button>
+        </div>
     }
+    <UrlShortener.Components.AccountTiersDisplay></UrlShortener.Components.AccountTiersDisplay>
 </div>
 
 <FooterComponent></FooterComponent>
@@ -30,8 +47,19 @@
     private UrlModel urlModel = new UrlModel();
     private string _shortUrl = "";
 
-    private async void CreateShortUrl(){
-        _shortUrl = await UrlGenerator.CreateShortUrlAsync(urlModel);
+    private async void CreateShortUrl()
+    {
+        var urlResponse = await UrlGenerator.CreateShortUrlAsync(urlModel);
+        if (urlResponse.IsSuccessful)
+        {
+            _shortUrl = urlResponse.Result;
+        }
+        //TODO: add error handling
+    }
+
+    private async void HandlePremiumActivation()
+    {
+        await PremiumSetterService.SetPremiumToCurrentUser();
     }
 }
 

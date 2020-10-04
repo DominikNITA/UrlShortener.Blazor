@@ -35,7 +35,9 @@ namespace UrlShortener
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
@@ -44,6 +46,7 @@ namespace UrlShortener
             services.AddScoped<ShortUrlGenerationService>();
             services.AddScoped<RedirectService>();
             services.AddScoped<AdService>();
+            services.AddScoped<PremiumSetterService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

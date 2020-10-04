@@ -1,0 +1,66 @@
+﻿<div class="card-deck mt-4">
+    <div class="card text-center bg-light" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Guest</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">5 seconds ads on redirect</li>
+            <li class="list-group-item">Lifespan: 1 week</li>
+            <li class="list-group-item">FREE</li>
+        </ul>
+    </div>
+    <div class="card text-center bg-light" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Free Tier</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">No Ads</li>
+            <li class="list-group-item">Lifespan: 1 year</li>
+            <li class="list-group-item">FREE</li>
+        </ul>
+        <div class="card-footer">
+            <AuthorizeView>
+                <NotAuthorized>
+                    <a href="#" class="btn btn-primary">Login</a>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    </div>
+    <div class="card text-center bg-light" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Premium</h5>
+            <p class="card-text">Most advance option for people in need for longterm short links</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">No Ad</li>
+            <li class="list-group-item">Lifespan: Unlimited</li>
+            <li class="list-group-item">Custom short url</li>
+            <li class="list-group-item">Price: 5$</li>
+        </ul>
+        <div class="card-footer">
+            <AuthorizeView>
+                <NotAuthorized>
+                    <a href="#" class="btn btn-success">Login & Buy</a>
+                </NotAuthorized>
+                <Authorized>
+                    @if (context.User.IsInRole("premium"))
+                    {
+                        <p>Thanks for supporting us!</p>
+                    }
+                    else
+                    {
+                        <a href="#" class="btn btn-success">Buy premium</a>
+                    }
+                </Authorized>
+            </AuthorizeView>
+        </div>
+    </div>
+
+</div>
+
+
+@code {
+
+}

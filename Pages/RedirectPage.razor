@@ -5,6 +5,7 @@
 @inject AdService AdService
 
 <div class="redirect-banner">
+    <a href="/"><span>URL .NET SHORTENER</span></a>
     <p class="redirect-banner__text">Redirection in <span class="timer">@_timerValue.Seconds</span> seconds</p>
 </div>
 <div class="ads">
@@ -22,19 +23,34 @@
 @code {
     [Parameter] public string ShortUrl { get; set; } = string.Empty;
 
-    string _redirectUrl = "";
+    string _urlRedirect;
     TimeSpan _timerValue = new TimeSpan(0, 0, 5);
     bool _isStopWatchRunning = false;
     List<AdData> _adData;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
+        var urlResponse = await RedirectService.GetRedirectUrl(ShortUrl);
+
+        if (!urlResponse.IsSuccessful)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        if (!urlResponse.Result.ShowAds)
+        {
+            NavigationManager.NavigateTo(urlResponse.Result.RedirectUrl);
+            return;
+        }
+
+        _urlRedirect = urlResponse.Result.RedirectUrl;
         _adData = AdService.GetAds();
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && ShortUrl != "r")
+        if (firstRender)
         {
             await StartTimer();
         }
@@ -52,8 +68,8 @@
             if (_timerValue.Seconds <= 0)
             {
                 _isStopWatchRunning = false;
-                _redirectUrl = await RedirectService.GetRedirectUrl(ShortUrl);
-                NavigationManager.NavigateTo(_redirectUrl);
+                NavigationManager.NavigateTo(_urlRedirect);
+                //TODO: add error handling
             }
         }
     }

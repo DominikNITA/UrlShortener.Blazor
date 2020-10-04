@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UrlShortener.Data;
 
 namespace UrlShortener.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201003182503_SwitchedToDiscardDate")]
+    partial class SwitchedToDiscardDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,9 +157,11 @@ namespace UrlShortener.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -195,9 +199,11 @@ namespace UrlShortener.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
@@ -210,7 +216,7 @@ namespace UrlShortener.Migrations
 
             modelBuilder.Entity("UrlShortener.Data.UrlEntry", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ShortUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("DiscardDate")
@@ -219,13 +225,7 @@ namespace UrlShortener.Migrations
                     b.Property<string>("RedirectUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ShortUrl")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("ShowAds")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
+                    b.HasKey("ShortUrl");
 
                     b.ToTable("UrlEntries");
                 });

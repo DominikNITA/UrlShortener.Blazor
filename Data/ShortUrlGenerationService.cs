@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,34 +22,73 @@ namespace UrlShortener.Data
             _authenticationStateProvider = authenticationStateProvider;
         }
 
-        public async Task<string> CreateShortUrlAsync(UrlModel urlModel)
+        public async Task<UrlResponse> CreateShortUrlAsync(UrlModel urlModel)
         {
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
+            DateTime? discardDate = GetDiscardDateFromUserType(user);
 
-            if(urlModel.ShortUrl == null || !user.IsInRole("premium"))
-            {
-                //If redirect url already exists in the database return it's short url. Update creation date
-                var temp = await _context.UrlEntries.FirstOrDefaultAsync(url => url.RedirectUrl == urlModel.UrlString);
-                if (temp != null)
-                {
-                    temp.CreationDate = DateTime.Now;
-                    _context.Update(temp);
-                    await _context.SaveChangesAsync();
-                    return temp.ShortUrl;
-                }
-            }
+
+
+            //if(urlModel.ShortRelativeUrl == null || !user.IsInRole("premium"))
+            //{
+            //    //If redirect url already exists in the database return it's short url. Update creation date
+            //    var temp = await _context.UrlEntries.FirstOrDefaultAsync(url => url.RedirectUrl == urlModel.UrlString);
+            //    if (temp != null)
+            //    {
+            //        temp.DiscardDate = discardDate;
+            //        _context.Update(temp);
+            //        await _context.SaveChangesAsync();
+            //        return new UrlResponse(temp.ShortUrl);
+            //    }
+            //}
 
             var urlEntry = new UrlEntry();
+            urlEntry.DiscardDate = discardDate;
             urlEntry.RedirectUrl = urlModel.UrlString;
-            //Generate new short url for the url. If it already exists => retry until success
-            do{
-                urlEntry.ShortUrl = GenerateShortUrl();
-            } while (_context.UrlEntries.Where(url => url.ShortUrl == urlEntry.ShortUrl).Count() > 0);
 
-            await _context.UrlEntries.AddAsync(urlEntry);
+            if(urlModel.ShortRelativeUrl != null && user.IsInRole("premium"))
+            {
+                if(_context.UrlEntries.Where(url => url.ShortUrl == urlModel.ShortRelativeUrl).Any())
+                {
+                    return new UrlResponse() { IsSuccessful = false };
+                }
+                else
+                {
+                    urlEntry.ShortUrl = urlModel.ShortRelativeUrl;
+                }
+            }
+            else
+            {
+                //Generate new short url for the url. If it already exists => retry until success
+                do
+                {
+                    urlEntry.ShortUrl = GenerateShortUrl();
+                } while (_context.UrlEntries.Where(url => url.ShortUrl == urlEntry.ShortUrl).Any());
+            }
+
+            if (!user.Identity.IsAuthenticated)
+            {
+                urlEntry.ShowAds = true;
+            }
+
+            _context.UrlEntries.Add(urlEntry);
             await _context.SaveChangesAsync();
-            return urlEntry.ShortUrl;
+
+            return new UrlResponse(urlEntry.ShortUrl);
+        }
+
+        private DateTime? GetDiscardDateFromUserType(System.Security.Claims.ClaimsPrincipal user)
+        {
+            if (!user.Identity.IsAuthenticated)
+            {
+                return DateTime.Now.AddDays(7);
+            }
+            if (user.IsInRole("premium"))
+            {
+                return null;
+            }
+            return DateTime.Now.AddYears(1);
         }
 
         private string GenerateShortUrl()

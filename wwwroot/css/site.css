@@ -1,7 +1,8 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url(https://fonts.googleapis.com/css?family=Asap:400,700|Lato:400,700,900|Source+Sans+Pro:400,700&display=swap);
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: asap,'Helvetica Neue', Helvetica, Arial, sans-serif;
     --backgroundColor: #e5eaf5;
     --secondaryBackgroundColor: #d0bdf4;
     --titleColor: #8458B3;
@@ -32,6 +33,11 @@ h1 {
     font-size: 75px;
     font-weight: 600;
     color: var(--textColor);
+}
+
+h5{
+    font-weight: 600;
+    color: var(--titleColor);
 }
 
 .valid.modified:not([type=checkbox]) {

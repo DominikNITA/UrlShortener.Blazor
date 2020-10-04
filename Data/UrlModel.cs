@@ -11,6 +11,6 @@ namespace UrlShortener.Data
         [Required]
         [StringLength(1000, MinimumLength = 1)]
         public string UrlString { get; set; }
-        public string ShortUrl{ get; set; }
+        public string ShortRelativeUrl{ get; set; }
     }
 }
