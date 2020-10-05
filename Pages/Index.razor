@@ -2,41 +2,42 @@
 @using UrlShortener.Data
 @inject NavigationManager NavigationManager
 @inject ShortUrlGenerationService UrlGenerator
+@inject IJSRuntime JSRuntime
 
 <div class="container-fluid">
-    <div class="row  align-items-center">
-        <div class="col-0 col-md-3"></div>
-        <h1 class="col-12 col-md-6 text-justify">URL .NET SHORTENER</h1>
-        <LoginDisplay ></LoginDisplay>
+    <div class="row align-items-center">
+        <div class="col-0 col-lg-2 p-0"></div>
+        <h1 class="col-12 col-lg-8 text-center p-0">URL .NET SHORTENER</h1>
+        <LoginDisplay></LoginDisplay>
     </div>
 </div>
 
 
-<div class="d-flex flex-column align-items-center col-12 col-md-8">
+<div class="d-flex flex-column align-items-center col-12 col-md-8 mt-4">
     @if (_shortUrl.Length == 0)
     {
 
-    <EditForm Model="urlModel" OnValidSubmit="@CreateShortUrl" class="row col-10 d-flex flex-column justify-content-center align-items-center">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <div class="input-group input-group-lg justify-content-center col-12">
-            <InputText DisplayName="Url" placeholder="Type your URL:" @bind-Value="urlModel.UrlString" class="form-control col-7"></InputText>
-            <AuthorizeView Roles="premium" Context="authContext">
-                <Authorized>
-                    <InputText DisplayName="Short Url" placeholder="Your custom link ending" @bind-Value="urlModel.ShortRelativeUrl" class="form-control col-3 bg-purpleSecondary"></InputText>
-                </Authorized>
-            </AuthorizeView>
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-light btn-outline-primary">Shorten</button>
+        <EditForm Model="urlModel" OnValidSubmit="@CreateShortUrl" class="row col-12 col-lg-10 d-flex flex-column justify-content-center align-items-center">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="input-group-lg input-group justify-content-center flex-md-row col-12">
+                <InputText DisplayName="Url" placeholder="Type your URL:" @bind-Value="urlModel.UrlString" class="form-control col-7"></InputText>
+                <AuthorizeView Roles="premium" Context="authContext">
+                    <Authorized>
+                        <InputText DisplayName="Short Url" placeholder="Your custom link ending" @bind-Value="urlModel.ShortRelativeUrl" class="form-control col-3 bg-purpleSecondary"></InputText>
+                    </Authorized>
+                </AuthorizeView>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-light btn-outline-primary">Shorten</button>
+                </div>
             </div>
-        </div>
-    </EditForm>
+        </EditForm>
     }
     else
     {
         <div class="d-flex flex-row m-5">
-            <div class="url-form__input p-2">@(NavigationManager.BaseUri+_shortUrl)</div>
-            <button type="button" class="btn btn-info">Copy</button>
+            <div class="login-display p-3">@(NavigationManager.BaseUri+_shortUrl)</div>
+            <button type="button" class="btn btn-info" @onclick="CopyTextToClipboard">Copy</button>
         </div>
     }
     <p class="mb-3 mt-2 text-center font-italic">
@@ -60,6 +61,11 @@
             _shortUrl = urlResponse.Result;
         }
         //TODO: add error handling
+    }
+
+    private async Task CopyTextToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", NavigationManager.BaseUri + _shortUrl);
     }
 }
 

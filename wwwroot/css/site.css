@@ -183,3 +183,7 @@ h5{
     border: 3px solid var(--titleColor);
     border-radius: 15px;
 }
+
+.limiter{
+    margin: 0 10px;
+}
