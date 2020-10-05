@@ -1,12 +1,15 @@
-﻿<AuthorizeView>
-    <Authorized>
-        <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
-        <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
-        </form>
-    </Authorized>
-    <NotAuthorized>
-        <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login">Log in</a>
-    </NotAuthorized>
-</AuthorizeView>
+﻿<div class="login-display d-flex flex-row justify-content-center align-items-center m-2 p-2 col-12 col-md-2">
+    <AuthorizeView>
+        <Authorized>
+            <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+            <form method="post" action="Identity/Account/LogOut">
+                <button type="submit" class="nav-link btn btn-link">Log out</button>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <a href="Identity/Account/Register" class="text-black-50 px-2 font-weight-bold">Register</a>
+            <span>|</span>
+            <a href="Identity/Account/Login" class="text-black-50 px-2 font-weight-bold">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>

@@ -1,0 +1,13 @@
+﻿@page "/getpremium"
+<h3>PremiumPage</h3>
+@attribute [Authorize]
+@inject PremiumSetterService PremiumSetterService
+
+<button @onclick="HandlePremiumActivation" class="btn btn-warning m-3 btn-outline-dark">Upgrade to premium</button>
+
+@code {
+    private async void HandlePremiumActivation()
+    {
+        await PremiumSetterService.SetPremiumToCurrentUser();
+    }
+}

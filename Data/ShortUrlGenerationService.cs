@@ -15,6 +15,7 @@ namespace UrlShortener.Data
     {
         ApplicationDbContext _context;
         AuthenticationStateProvider _authenticationStateProvider;
+        List<string> _reservedShortLinks = new List<string>() { "report" };
 
         public ShortUrlGenerationService(ApplicationDbContext context, AuthenticationStateProvider authenticationStateProvider)
         {
@@ -24,11 +25,13 @@ namespace UrlShortener.Data
 
         public async Task<UrlResponse> CreateShortUrlAsync(UrlModel urlModel)
         {
+            if (!CheckValidUrl(urlModel.UrlString))
+            {
+                return new UrlResponse() { IsSuccessful = false };
+            }
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
             DateTime? discardDate = GetDiscardDateFromUserType(user);
-
-
 
             //if(urlModel.ShortRelativeUrl == null || !user.IsInRole("premium"))
             //{
@@ -49,6 +52,10 @@ namespace UrlShortener.Data
 
             if(urlModel.ShortRelativeUrl != null && user.IsInRole("premium"))
             {
+                if (_reservedShortLinks.Contains(urlModel.ShortRelativeUrl))
+                {
+                    return new UrlResponse() { IsSuccessful = false };
+                }
                 if(_context.UrlEntries.Where(url => url.ShortUrl == urlModel.ShortRelativeUrl).Any())
                 {
                     return new UrlResponse() { IsSuccessful = false };
@@ -64,7 +71,7 @@ namespace UrlShortener.Data
                 do
                 {
                     urlEntry.ShortUrl = GenerateShortUrl();
-                } while (_context.UrlEntries.Where(url => url.ShortUrl == urlEntry.ShortUrl).Any());
+                } while (_context.UrlEntries.Where(url => url.ShortUrl == urlEntry.ShortUrl).Any() || _reservedShortLinks.Contains(urlEntry.ShortUrl));
             }
 
             if (!user.Identity.IsAuthenticated)

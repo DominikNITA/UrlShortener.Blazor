@@ -1,8 +1,9 @@
-﻿<div class="footer">
-    <span>Url shortener made with Blazor Server</span>
-    <span>Dominik Nita 2020</span>
+﻿<div class="footer flex-column flex-md-row">
+    <span class="font-weight-bold ">Url shortener made with Blazor Server</span>
+    <a href="/report/@ShortUrl"><span class="col-10 col-md-2">Report short Url</span></a>
+    <span class="font-weight-bold col-10 col-md-2">Dominik Nita 2020</span>
 </div>
 
 @code {
-
+    [Parameter] public string ShortUrl { get; set; }
 }
