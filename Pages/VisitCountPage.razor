@@ -1,0 +1,32 @@
+﻿@page "/Identity/Account/VisitCounter"
+@inject ApplicationDbContext Context
+@attribute [Authorize]
+<h3>VisitCountPage</h3>
+@if (_urlEntries != null)
+{
+    <table class="table table-striped">
+        <tbody>
+            @foreach (var urlEntry in _urlEntries)
+            {
+                <tr>
+                    <td>@urlEntry.Id</td>
+                    <td>@urlEntry.RedirectUrl</td>
+                    <td>@urlEntry.ShortUrl</td>
+                    <td>@urlEntry.VisitCount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    List<UrlEntry> _urlEntries;
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (!authenticationStateTask.IsCompleted || !authenticationStateTask.Result.User.Identity.IsAuthenticated) return;
+        _urlEntries = Context.UrlEntries.Where(url => url.OwnerId == authenticationStateTask.Result.User.Identity.Name).ToList();
+    }
+}

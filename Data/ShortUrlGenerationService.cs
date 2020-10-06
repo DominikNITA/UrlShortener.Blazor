@@ -74,9 +74,11 @@ namespace UrlShortener.Data
                 } while (_context.UrlEntries.Where(url => url.ShortUrl == urlEntry.ShortUrl).Any() || _reservedShortLinks.Contains(urlEntry.ShortUrl));
             }
 
+            urlEntry.OwnerId = user.Identity.Name;
             if (!user.Identity.IsAuthenticated)
             {
                 urlEntry.ShowAds = true;
+                urlEntry.OwnerId = "";
             }
 
             _context.UrlEntries.Add(urlEntry);

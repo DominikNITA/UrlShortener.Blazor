@@ -22,6 +22,10 @@ namespace UrlShortener.Data
             );
 
             if (temp == null) return new UrlEntryResponse() { IsSuccessful = false };
+
+            temp.VisitCount++;
+            await _context.SaveChangesAsync();
+
             return new UrlEntryResponse(temp);
         }
     }
