@@ -27,7 +27,7 @@ namespace UrlShortener.Data
         {
             if (!CheckValidUrl(urlModel.UrlString))
             {
-                return new UrlResponse() { IsSuccessful = false };
+                return new UrlResponse() { IsSuccessful = false, ErrorMessage = "String passed is not an URL. Please try again" };
             }
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
@@ -54,11 +54,11 @@ namespace UrlShortener.Data
             {
                 if (_reservedShortLinks.Contains(urlModel.ShortRelativeUrl))
                 {
-                    return new UrlResponse() { IsSuccessful = false };
+                    return new UrlResponse() { IsSuccessful = false, ErrorMessage = "Reserved short URL, please try another one" };
                 }
                 if(_context.UrlEntries.Where(url => url.ShortUrl == urlModel.ShortRelativeUrl).Any())
                 {
-                    return new UrlResponse() { IsSuccessful = false };
+                    return new UrlResponse() { IsSuccessful = false, ErrorMessage = "Passed short URL is already taken" };
                 }
                 else
                 {

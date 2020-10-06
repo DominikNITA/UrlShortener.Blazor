@@ -21,8 +21,7 @@ namespace UrlShortener.Data
                 (!url.DiscardDate.HasValue || url.DiscardDate.Value.CompareTo(DateTime.Now) > 0)
             );
 
-            if (temp == null) return new UrlEntryResponse() { IsSuccessful = false };
-
+            if (temp == null) return new UrlEntryResponse() { IsSuccessful = false, ErrorMessage = "This link does not exist in our database. Please get in touch with the sender. Redirecting to the home page..." };
             temp.VisitCount++;
             await _context.SaveChangesAsync();
 

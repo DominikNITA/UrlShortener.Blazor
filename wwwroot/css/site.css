@@ -20,12 +20,21 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
-.content {
+.main {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     min-height: 100vh;
+    background-color: var(--backgroundColor);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     background-color: var(--backgroundColor);
 }
 
@@ -35,7 +44,7 @@ h1 {
     color: var(--textColor);
 }
 
-h5{
+h5 {
     font-weight: 600;
     color: var(--titleColor);
 }
@@ -166,24 +175,29 @@ h5{
     align-items: center;
     justify-content: space-around;
 }
+
     .footer * {
         //TODO
     }
 
-.text-purple{
+.text-purple {
     color: var(--titleColor);
 }
 
-.bg-purpleSecondary{
+.bg-purpleSecondary {
     background-color: var(--secondaryBackgroundColor);
 }
 
-.login-display{
+.login-display {
     background-color: white;
     border: 3px solid var(--titleColor);
     border-radius: 15px;
 }
 
-.limiter{
+.limiter {
     margin: 0 10px;
+}
+
+.header__title{
+    cursor: pointer;
 }

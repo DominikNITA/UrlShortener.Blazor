@@ -1,4 +1,5 @@
 ﻿@page "/{ShortUrl}"
+@layout RedirectLayout
 @using UrlShortener.Components
 @inject RedirectService RedirectService
 @inject NavigationManager NavigationManager
@@ -8,6 +9,9 @@
     <a href="/"><span>URL .NET SHORTENER</span></a>
     <p class="redirect-banner__text">Redirection in <span class="timer">@_timerValue.Seconds</span> seconds</p>
 </div>
+@if(_errorMessage != ""){
+    <div class="alert alert-danger">@_errorMessage</div>
+}
 <div class="ads">
     @if (_adData != null)
     {
@@ -17,8 +21,6 @@
         }
     }
 </div>
-<FooterComponent></FooterComponent>
-
 
 @code {
     [Parameter] public string ShortUrl { get; set; } = string.Empty;
@@ -27,6 +29,7 @@
     TimeSpan _timerValue = new TimeSpan(0, 0, 5);
     bool _isStopWatchRunning = false;
     List<AdData> _adData;
+    string _errorMessage = "";
 
     protected async override Task OnInitializedAsync()
     {
@@ -34,6 +37,9 @@
 
         if (!urlResponse.IsSuccessful)
         {
+            _errorMessage = urlResponse.ErrorMessage;
+            StateHasChanged();
+            await Task.Delay(3000);
             NavigationManager.NavigateTo("/");
             return;
         }
@@ -45,6 +51,7 @@
         }
 
         _urlRedirect = urlResponse.Result.RedirectUrl;
+        Console.WriteLine(_urlRedirect);
         _adData = AdService.GetAds();
     }
 
@@ -69,7 +76,6 @@
             {
                 _isStopWatchRunning = false;
                 NavigationManager.NavigateTo(_urlRedirect);
-                //TODO: add error handling
             }
         }
     }

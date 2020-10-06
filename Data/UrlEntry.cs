@@ -28,6 +28,7 @@ namespace UrlShortener.Data
     {
         public UrlEntry Result { get; set; }
         public bool IsSuccessful { get; set; }
+        public string ErrorMessage { get; set; }
         public UrlEntryResponse(UrlEntry result)
         {
             Result = result;

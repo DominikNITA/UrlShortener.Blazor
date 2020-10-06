@@ -9,6 +9,7 @@ namespace UrlShortener.Data
     {
         public string Result { get; set; }
         public bool IsSuccessful { get; set; }
+        public string ErrorMessage { get; set; }
 
         public UrlResponse(string shortRelativeUrl)
         {
