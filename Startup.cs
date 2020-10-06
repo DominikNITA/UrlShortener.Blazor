@@ -47,6 +47,7 @@ namespace UrlShortener
             services.AddScoped<RedirectService>();
             services.AddScoped<AdService>();
             services.AddScoped<PremiumSetterService>();
+            services.AddScoped<ReportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

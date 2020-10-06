@@ -1,7 +1,58 @@
 ﻿@page "/report"
 @page "/report/{ShortUrl}"
-<h3>ReportPage</h3>
+@inject ReportService ReportService
+<h2 class="text-purple font-weight-bolder m-3">Report offensive or disturbing link</h2>
+<EditForm Model="_report" OnValidSubmit="HandleValidSubmit" class="d-flex flex-column col-12 col-sm-11 col-md-10 col-lg-8 row">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
+    <label class="text-purple font-italic font-weight-bold h3">Short Url</label>
+    <InputText @bind-Value="_report.UrlEntry.ShortUrl" placeholder="ex. a93e3 or github" class="form-control-lg col-12 col-md-4 m-2"></InputText>
+
+    <label class="text-purple font-italic font-weight-bold h3">Description</label>
+    <InputTextArea rows="10" @bind-Value="_report.Reason" placeholder="Describe the report..." class="form-control-lg col-12 col-md-10 m-2"></InputTextArea>
+
+    @if (_positiveResponse != "")
+    {
+        <div class="alert alert-success">@_positiveResponse</div>
+    }
+    @if (_negativeResponse != "")
+    {
+        <div class="alert alert-warning">@_negativeResponse</div>
+    }
+
+    <button type="submit" class="btn btn-info col-8 col-md-6 col-lg-2 m-3">Report</button>
+</EditForm>
 @code {
-    [Parameter] public string ShortUrl { get; set; }
+    [Parameter] public string ShortUrl { get; set; } = "";
+    Report _report;
+    string _positiveResponse = "";
+    string _negativeResponse = "";
+
+    protected override void OnInitialized()
+    {
+        _report = new Report();
+        if (ShortUrl != "")
+        {
+            _report.UrlEntry.ShortUrl = ShortUrl;
+        }
+    }
+
+    public async Task HandleValidSubmit()
+    {
+        var result = await ReportService.SendReport(_report);
+
+        _report = new Report();
+
+        if (result)
+        {
+            _negativeResponse = "";
+            _positiveResponse = "Report successfully sent!";
+        }
+        else
+        {
+            _negativeResponse = "Incorrect short url!";
+            _positiveResponse = "";
+        }
+    }
 }

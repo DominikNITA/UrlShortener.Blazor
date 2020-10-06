@@ -20,7 +20,7 @@
 
 @code {
     [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    Task<AuthenticationState> authenticationStateTask { get; set; }
     List<UrlEntry> _urlEntries;
 
     protected async override Task OnInitializedAsync()

@@ -184,6 +184,10 @@ h5 {
     color: var(--titleColor);
 }
 
+.text-purple__dark{
+    color: var(--textColor);
+}
+
 .bg-purpleSecondary {
     background-color: var(--secondaryBackgroundColor);
 }

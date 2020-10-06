@@ -9,6 +9,8 @@ namespace UrlShortener.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<UrlEntry> UrlEntries { get; set; }
+        public DbSet<Report> Reports { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
