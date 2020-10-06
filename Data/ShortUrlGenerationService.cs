@@ -25,10 +25,13 @@ namespace UrlShortener.Data
 
         public async Task<UrlResponse> CreateShortUrlAsync(UrlModel urlModel)
         {
-            if (!CheckValidUrl(urlModel.UrlString))
+            string urlTemp = urlModel.UrlString;
+            if (!CheckValidUrl(ref urlTemp))
             {
                 return new UrlResponse() { IsSuccessful = false, ErrorMessage = "String passed is not an URL. Please try again" };
             }
+            urlModel.UrlString = urlTemp;
+
             var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
             DateTime? discardDate = GetDiscardDateFromUserType(user);
@@ -105,7 +108,7 @@ namespace UrlShortener.Data
            return Guid.NewGuid().ToString().Substring(0, 5);
         }
 
-        private bool CheckValidUrl(string url)
+        private bool CheckValidUrl(ref string url)
         {
             if (!Regex.IsMatch(url, @"^https?:\/\/", RegexOptions.IgnoreCase))
                 url = "http://" + url;
