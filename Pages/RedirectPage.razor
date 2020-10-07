@@ -9,7 +9,8 @@
     <a href="/"><span>URL .NET SHORTENER</span></a>
     <p class="redirect-banner__text">Redirection in <span class="timer">@_timerValue.Seconds</span> seconds</p>
 </div>
-@if(_errorMessage != ""){
+@if (_errorMessage != "")
+{
     <div class="alert alert-danger">@_errorMessage</div>
 }
 <div class="ads">
@@ -51,8 +52,8 @@
         }
 
         _urlRedirect = urlResponse.Result.RedirectUrl;
-        Console.WriteLine(_urlRedirect);
         _adData = AdService.GetAds();
+        NavigationManager.LocationChanged += OnPageChanged;
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -62,7 +63,6 @@
             await StartTimer();
         }
     }
-
 
     async Task StartTimer()
     {
@@ -78,5 +78,10 @@
                 NavigationManager.NavigateTo(_urlRedirect);
             }
         }
+    }
+
+    void OnPageChanged(object sender, LocationChangedEventArgs e)
+    {
+        _isStopWatchRunning = false;
     }
 }

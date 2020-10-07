@@ -1,9 +1,10 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 <div class="main">
     <div class="content">
         @Body
     </div>
-    <FooterComponent></FooterComponent>
+    <FooterComponent ShortUrl="@(NavigationManager.ToBaseRelativePath(NavigationManager.Uri))"></FooterComponent>
 </div>
 
 @code {

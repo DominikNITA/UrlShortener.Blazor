@@ -14,10 +14,10 @@ namespace UrlShortener.Data
         public UrlEntry UrlEntry { get; set; }
         [MaxLength(500)]
         public string Reason { get; set; }
+        public bool IsResolved { get; set; }
 
         public Report()
         {
-            UrlEntry = new UrlEntry();
         }
     }
 }

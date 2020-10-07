@@ -18,7 +18,8 @@ namespace UrlShortener.Data
         {
             var temp = await _context.UrlEntries.FirstOrDefaultAsync(url =>
                 url.ShortUrl == shortUrl &&
-                (!url.DiscardDate.HasValue || url.DiscardDate.Value.CompareTo(DateTime.Now) > 0)
+                (!url.DiscardDate.HasValue || url.DiscardDate.Value.CompareTo(DateTime.Now) > 0) &&
+                !url.IsBanned
             );
 
             if (temp == null) return new UrlEntryResponse() { IsSuccessful = false, ErrorMessage = "This link does not exist in our database. Please get in touch with the sender. Redirecting to the home page..." };

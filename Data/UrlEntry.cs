@@ -14,6 +14,7 @@ namespace UrlShortener.Data
         public string ShortUrl { get; set; }
         public string RedirectUrl { get; set; }
         public DateTime? DiscardDate { get; set; }
+        public bool IsBanned { get; set; } = false;
         public bool ShowAds { get; set; } = false;
         public string OwnerId { get; set; }
         public int VisitCount { get; set; }

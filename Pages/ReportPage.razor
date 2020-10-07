@@ -32,6 +32,7 @@
     protected override void OnInitialized()
     {
         _report = new Report();
+        _report.UrlEntry = new UrlEntry();
         if (ShortUrl != "")
         {
             _report.UrlEntry.ShortUrl = ShortUrl;
@@ -43,6 +44,7 @@
         var result = await ReportService.SendReport(_report);
 
         _report = new Report();
+        _report.UrlEntry = new UrlEntry();
 
         if (result)
         {
