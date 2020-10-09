@@ -1,4 +1,5 @@
 ﻿@page "/"
+@page "/index"
 @using UrlShortener.Data
 @inject NavigationManager NavigationManager
 @inject ShortUrlGenerationService UrlGenerator
@@ -7,7 +8,7 @@
 <div class="d-flex flex-column align-items-center col-12 col-md-8 mt-4">
     @if (_shortUrl.Length == 0)
     {
-        if(_errorMessage.Length > 0)
+        if (_errorMessage.Length > 0)
         {
             <div class="alert alert-danger">@_errorMessage</div>
         }
@@ -48,6 +49,19 @@
     private string _shortUrl = "";
 
     private string _errorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += ResetPage;
+    }
+
+    void ResetPage(object sender, LocationChangedEventArgs e)
+    {
+        urlModel = new UrlModel();
+        _shortUrl = "";
+        _errorMessage = "";
+        StateHasChanged();
+    }
 
     private async void CreateShortUrl()
     {

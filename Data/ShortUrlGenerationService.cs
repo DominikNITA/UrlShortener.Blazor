@@ -15,7 +15,7 @@ namespace UrlShortener.Data
     {
         ApplicationDbContext _context;
         AuthenticationStateProvider _authenticationStateProvider;
-        List<string> _reservedShortLinks = new List<string>() { "report" };
+        List<string> _reservedShortLinks = new List<string>() { "report", "index" };
 
         public ShortUrlGenerationService(ApplicationDbContext context, AuthenticationStateProvider authenticationStateProvider)
         {

@@ -83,5 +83,6 @@
     void OnPageChanged(object sender, LocationChangedEventArgs e)
     {
         _isStopWatchRunning = false;
+        NavigationManager.LocationChanged -= OnPageChanged;
     }
 }
