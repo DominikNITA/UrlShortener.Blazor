@@ -1,18 +1,17 @@
-﻿<div class="col-12 col-lg-2 p-0">
-    <div class="login-display d-flex flex-row justify-content-center align-items-center p-1 mx-2">
-        <AuthorizeView>
-            <Authorized>
-                <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
-                <span class="limiter">|</span>
-                <form method="post" action="Identity/Account/LogOut">
-                    <button type="submit" class="nav-link btn btn-link p-0">Log out</button>
-                </form>
-            </Authorized>
-            <NotAuthorized>
-                <a href="Identity/Account/Register" class="text-black-50 px-2 font-weight-bold">Register</a>
-                <span class="limiter">|</span>
-                <a href="Identity/Account/Login" class="text-black-50 px-2 font-weight-bold">Log in</a>
-            </NotAuthorized>
-        </AuthorizeView>
-    </div>
+﻿
+<div class="login-display d-flex flex-row justify-content-center align-items-center p-1  w-auto">
+    <AuthorizeView>
+        <Authorized>
+            <a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+            <span class="limiter">|</span>
+            <form method="post" action="Identity/Account/LogOut">
+                <button type="submit" class="nav-link btn btn-link p-0">Log out</button>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <a href="Identity/Account/Register" class="text-black-50 px-2 font-weight-bold">Register</a>
+            <span class="limiter">|</span>
+            <a href="Identity/Account/Login" class="text-black-50 px-2 font-weight-bold">Log in</a>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>

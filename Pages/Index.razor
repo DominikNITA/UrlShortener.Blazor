@@ -15,7 +15,7 @@
         <EditForm Model="urlModel" OnValidSubmit="@CreateShortUrl" class="row col-12 col-lg-10 d-flex flex-column justify-content-center align-items-center">
             <DataAnnotationsValidator />
             <ValidationSummary />
-            <div class="input-group-lg input-group justify-content-center flex-md-row col-12">
+            <div class="input-group input-group-lg justify-content-center align-items-center flex-md-row col-12 m-1">
                 <InputText DisplayName="Url" placeholder="Type your URL:" @bind-Value="urlModel.UrlString" class="form-control col-7"></InputText>
                 <AuthorizeView Roles="premium" Context="authContext">
                     <Authorized>
@@ -23,7 +23,7 @@
                     </Authorized>
                 </AuthorizeView>
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-light btn-outline-primary">Shorten</button>
+                    <button type="submit" class="btn btn-shorten">Shorten</button>
                 </div>
             </div>
         </EditForm>
@@ -32,7 +32,7 @@
     {
         <div class="d-flex flex-row m-5">
             <div class="login-display p-3">@(NavigationManager.BaseUri+_shortUrl)</div>
-            <button type="button" class="btn btn-info" @onclick="CopyTextToClipboard">Copy</button>
+            <button type="button" class="btn btn-info m-1 p-2 h-auto w-auto" @onclick="CopyTextToClipboard">Copy</button>
         </div>
     }
     <p class="mb-3 mt-2 text-center font-italic">

@@ -110,6 +110,8 @@ namespace UrlShortener.Data
 
         private bool CheckValidUrl(ref string url)
         {
+            if (!url.Contains('.')) return false;
+
             if (!Regex.IsMatch(url, @"^https?:\/\/", RegexOptions.IgnoreCase))
                 url = "http://" + url;
 

@@ -8,10 +8,11 @@ html, body {
     --titleColor: #8458B3;
     --highlightColor: #a0d2eb;
     --textColor: #493d5f;
+    box-sizing:border-box;
 }
 
 a, .btn-link {
-    color: #0366d6;
+    color: var(--textColor);
 }
 
 .btn-primary {
@@ -204,4 +205,24 @@ h5 {
 
 .header__title{
     cursor: pointer;
+}
+
+.btn-shorten{
+    background-color : var(--secondaryBackgroundColor);
+    color: black;
+    border: 1px solid #585656;
+}
+
+.btn-shorten:hover {
+    background-color: var(--textColor);
+    color: white;
+    border: 1px solid #c6bdbd;
+}
+
+
+
+@media (max-width: 768px) {
+    .header__title *{
+        font-size: 50px !important;
+    }
 }

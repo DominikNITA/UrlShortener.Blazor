@@ -1,12 +1,16 @@
 ﻿@inject NavigationManager NavigationManager
-<div class="container-fluid">
+<header class="container-fluid">
     <div class="row align-items-center">
         <div class="col-0 col-lg-2 p-0"></div>
-        <a class="header__title col-12 col-lg-8" href="./index"><h1 class="text-center p-0">URL .NET SHORTENER</h1></a>
-        <LoginDisplay></LoginDisplay>
+        <a class="header__title col-12 col-lg-8" href="/"><h1 class="text-center p-0">URL .NET SHORTENER</h1></a>
+        @if (!IsLoginDisplayHidden)
+        {
+            <LoginDisplay></LoginDisplay>
+        }
     </div>
-</div>
+</header>
 
 @code {
+    [Parameter] public bool IsLoginDisplayHidden { get; set; } = false;
     @*@onclick="@(() => NavigationManager.NavigateTo(""))"*@
 }
