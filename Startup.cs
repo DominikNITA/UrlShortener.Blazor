@@ -60,7 +60,7 @@ namespace UrlShortener
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext applicationDbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -68,7 +68,6 @@ namespace UrlShortener
             }
             else
             {
-                applicationDbContext.Database.Migrate();
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -93,19 +92,31 @@ namespace UrlShortener
         public string GetConnectionStringToHerokuDatabase()
         {
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-            var databaseUri = new Uri(databaseUrl);
-            var userInfo = databaseUri.UserInfo.Split(':');
+            //var databaseUri = new Uri(databaseUrl);
+            //var userInfo = databaseUri.UserInfo.Split(':');
 
-            var builder = new NpgsqlConnectionStringBuilder
-            {
-                Host = databaseUri.Host,
-                Port = databaseUri.Port,
-                Username = userInfo[0],
-                Password = userInfo[1],
-                Database = databaseUri.LocalPath.TrimStart('/')
-            };
+            //var builder = new NpgsqlConnectionStringBuilder
+            //{
+            //    Host = databaseUri.Host,
+            //    Port = databaseUri.Port,
+            //    Username = userInfo[0],
+            //    Password = userInfo[1],
+            //    Database = databaseUri.LocalPath.TrimStart('/')
+            //};
 
-            return builder.ToString();
+            //return builder.ToString();
+
+            // Parse connection URL to connection string for Npgsql
+            databaseUrl = databaseUrl.Replace("postgres://", string.Empty);
+            var pgUserPass = databaseUrl.Split("@")[0];
+            var pgHostPortDb = databaseUrl.Split("@")[1];
+            var pgHostPort = pgHostPortDb.Split("/")[0];
+            var pgDb = pgHostPortDb.Split("/")[1];
+            var pgUser = pgUserPass.Split(":")[0];
+            var pgPass = pgUserPass.Split(":")[1];
+            var pgHost = pgHostPort.Split(":")[0];
+            var pgPort = pgHostPort.Split(":")[1];
+            return $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}";
         }
     }
 }
