@@ -34,7 +34,7 @@ namespace UrlShortener
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            if (!_env.IsDevelopment())
+            if (_env.IsDevelopment())
             {
                 services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             }
@@ -91,7 +91,6 @@ namespace UrlShortener
 
         public string GetConnectionStringToHerokuDatabase()
         {
-            return "a";
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
             //var databaseUri = new Uri(databaseUrl);
             //var userInfo = databaseUri.UserInfo.Split(':');
