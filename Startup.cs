@@ -40,7 +40,7 @@ namespace UrlShortener
             }
             else
             {
-                services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(GetConnectionStringToHerokuDatabase()));
+                services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(GetConnectionStringToHerokuDatabase()));
             }
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -91,7 +91,7 @@ namespace UrlShortener
 
         public string GetConnectionStringToHerokuDatabase()
         {
-            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            var databaseUrl = "postgres://eoglzowtpiwmkd:98d59f63513aaa0e8bb359565f3b78a118230f0b6b402156d9eedb476c35bbdb@ec2-54-228-209-117.eu-west-1.compute.amazonaws.com:5432/d3fbcuc9mtjgkv";
             //var databaseUri = new Uri(databaseUrl);
             //var userInfo = databaseUri.UserInfo.Split(':');
 
