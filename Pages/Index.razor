@@ -23,7 +23,7 @@
                     </Authorized>
                 </AuthorizeView>
                 <div class="input-group-append">
-                    <button type="submit" class="btn btn-shorten">Shorten</button>
+                    <button type="submit" class="btn btn-shorten" disabled="@_isProcessing">Shorten</button>
                 </div>
             </div>
         </EditForm>
@@ -50,6 +50,8 @@
 
     private string _errorMessage = "";
 
+    bool _isProcessing = false;
+
     protected override void OnInitialized()
     {
         NavigationManager.LocationChanged += ResetPage;
@@ -60,12 +62,14 @@
         urlModel = new UrlModel();
         _shortUrl = "";
         _errorMessage = "";
+        _isProcessing = false;
         StateHasChanged();
     }
 
     private async void CreateShortUrl()
     {
         _errorMessage = "";
+        _isProcessing = true;
         var urlResponse = await UrlGenerator.CreateShortUrlAsync(urlModel);
         if (urlResponse.IsSuccessful)
         {
@@ -74,6 +78,7 @@
         else
         {
             _errorMessage = urlResponse.ErrorMessage;
+            _isProcessing = false;
         }
     }
 
